@@ -1,37 +1,194 @@
-const express = require('express')
-const axios = require('axios')
+const express = require('express');
+const jwt = require('jsonwebtoken')
+const JWT_SECRET = "shagufa@8877"
 
 const app = express();
 app.use(express.json());
 
+
 const users = [];
 
-function genrateToken(){
-  const token = ["a", "b", "c", "d", "e"];
-}
+app.post('/signup', function(req, res){
+  const username = req.body.username
+  const password = req.body.password
 
-app.get('/me', function() {
-  const token = req.headers.token
-  const foundUser = null;
+   users.push({
+     username: username,
+     password: password
+   })
 
-  for(let i=0; i<users.length; i++){
-    if(users[i].token == token){
-      foundUser = users[i];
+   res.json({
+    message: "You Are SignUp"
+   })
+ 
 
+})
+
+app.post('/signin', function(req, res){
+   const username = req.body.username
+   const password = req.body.password
+   let foundUser = null;
+
+   for(let i =0; i<users.length; i++){
+    if(users[i].username == username && users[i].password == password){
+      foundUser = users[i]
     }
-  }
+   }
 
-  if(foundUser){
+   if(!foundUser){
     res.json({
-       username: foundUser.username,
-       password: foundUser.password
+      message: "wrong password or username"
     })
+   }else{
+    const token = jwt.sign({
+      username: "Shagufa"
+    }, JWT_SECRET)
+    res.header("jwt", token);
+    res.header("random", "shagufaanjum");
+    res.json({
+      token: token
+    })
+   }
+})
+
+function auth(req, res, next){
+  const token = req.body.token;
+  const decodedData = jwt.verify(token, JWT_SECRET);
+  if(decodedData.username){
+    next();
   }else{
     res.json({
-      message: "Invalid token"
+      message: " you are not login"
     })
   }
+}
+
+app.get('/me', auth, function(req, res){
+  let foundUser = null;
+
+  for(let i=0; i<users.length; i++){
+    if(users[i].username === decodedData.username){
+      foundUser = users[i]
+    }
+  }
+  res.json({
+    username: foundUser.username,
+    password: foundUser.password
+  })
+ 
+
 })
+
+app.get('/get', auth, (req, res) => {
+
+});
+
+app.post('/post', auth, (req, res) =>{
+
+})
+
+app.delete('/delete', auth, (req, res) => {
+
+})
+
+
+
+
+// const express = require('express')
+// const axios = require('axios')
+// const jwt = require('jsonwebtoken')
+// const JWT_SECRET = "shagufaloveanjum"
+
+// const app = express();
+// app.use(express.json());
+
+
+// const users = [];
+// app.post('/signin', function(req, res) {
+//   const username = req.body.username;
+//   const password = req.body.password;
+
+//   // map and flitter
+
+//   let foundUser = null;
+
+//   for(let i=0; i<users.length; i++){
+//     if(users[i].username == username && users[i].password == password){
+//       foundUser = users[i]
+//     }
+//   }
+
+//   if(foundUser){
+//     const token = jwt.sign({
+//       username: username
+//     }, JWT_SECRET);
+
+//     // found user token = token 
+//     res.json({
+//       token: token
+//     })
+//   }else{
+//     res.status(404).send({
+//       message: "invalid token"
+//     })
+//   }
+//   console.log(users);
+
+
+// })
+
+
+// app.get('/me', function(req, res){
+//   const token = req.headers.token
+//   const decodedInformation = jwt.verify(token, JWT_SECRET);
+//   const username = decodedInformation.username
+//   let foundUser = null;
+
+//   for(let i=0; i<users.length; i++){
+//     if(users[i].username == username){
+//       foundUser = users[i];
+//     }
+//   }
+
+//   if(foundUser){
+//     res.json({
+//       username: foundUser.username,
+//       password: foundUser.password
+
+//     })
+//   }else{
+//     res.json({
+//       message: "invalid token"
+//     })
+//   }
+// })
+
+// function genrateToken(){
+//   const token = ["a", "b", "c", "d", "e"];
+// }
+
+// app.get('/me', function() {
+//   const token = req.headers.token
+//   let foundUser = null;
+
+//   for(let i=0; i<users.length; i++){
+//     if(users[i].token == token){
+//       foundUser = users[i];
+
+//     }
+//   }
+
+//   if(foundUser){
+//     res.json({
+//        username: foundUser.username,
+//        password: foundUser.password
+//     })
+//   }else{
+//     res.json({
+//       message: "Invalid token"
+//     })
+//   }
+// })
 
 // const users = [];
 
