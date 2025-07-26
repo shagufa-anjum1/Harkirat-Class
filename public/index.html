@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+    <title>Auth web application</title>
+    <script>
+      async function signup() {
+        const username = document.getElementById("user-signup").value;
+        const password = document.getElementById("password-signup").value;
+
+        await axios.post("http://localhost:3000/signup", {
+          username: username,
+          password: password
+        });
+        alert("You are Sign in");
+        
+      }
+
+      async function signin() {
+        const username = document.getElementById("user-signin").value;
+        const password = document.getElementById("password-signin").value;
+
+        await axios.post("http://localhost:3000/signin", {
+          username: username,
+          password: password
+        });
+        alert("you are signin");
+        
+      }
+    </script>
+  </head>
+  <body>
+
+     <div>Signup
+      <input id="user-signup" type="text" name="username" placeholder="Username"/>
+      <input id="password-signup" type="password" name="password" placeholder="password" />
+      <button onclick="signup()">Submit</button>
+     </div>
+
+     <div> Signin
+      <input id="user-signin" type="test" name="username" placeholder="Username"/>
+      <input id="password-signin" type="password" name="password" placeholder="password"/>
+      <button onclick="signin()">Submit</button>
+     </div>
+
+     <div>
+      user information:
+      <div id="information"></div>
+     </div>
+
+     <div>
+      <button onclick="logout()">Logout</button>
+     </div>
+  </body>
+</html>
